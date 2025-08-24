@@ -27,9 +27,9 @@ class SE3MP(nn.Module):
         self.tp = FullyConnectedTensorProduct(self.irreps_in, self.sh_irreps, self.irreps_out, shared_weights=False)
 
         self.edge_mlp = nn.Sequential(
-            nn.Linear(edge_feat_dim, 4),
+            nn.Linear(edge_feat_dim, 64),
             nn.SiLU(),
-            nn.Linear(4, self.tp.weight_numel)
+            nn.Linear(64, self.tp.weight_numel)
         )
 
         self.skip = Linear(self.irreps_in, self.irreps_out)
@@ -79,10 +79,10 @@ class SE3AllFeatures(nn.Module):
         self.readout_proj = Linear(self.irreps_hidden, f"{readout_scalar_dim}x0e")
 
         self.head = nn.Sequential(
-            nn.Linear(readout_scalar_dim * 3, 4),
+            nn.Linear(readout_scalar_dim * 3, 64),
             nn.SiLU(),
             nn.Dropout(0.15),
-            nn.Linear(4, 1)
+            nn.Linear(64, 1)
         )
 
     def _pack_input(self, data):
